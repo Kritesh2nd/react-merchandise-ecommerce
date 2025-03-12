@@ -7,8 +7,8 @@ import {
 
 const MakeOrder = () => {
   // Calculate total price and discount
-  const { userCart } = loadHandelProduct();
-  const { getUserCart } = updateHandelProduct();
+  const { userCart } = loadHandelProduct();r
+  const { getUserCart, makePayment } = updateHandelProduct();
   const totalAmount = userCart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -20,16 +20,14 @@ const MakeOrder = () => {
   const finalAmount = (totalAmount - totalDiscount).toFixed(2);
 
   const onOrder = () => {
-    // Order logic here
+    const userOrder = userCart;
+    // console.log("userCart", userCart);
+    makePayment(userCart);
   };
 
   useEffect(() => {
     getUserCart();
   }, []);
-
-  useEffect(() => {
-    getUserCart();
-  }, [userCart]);
 
   return (
     <div className="flex justify-center p-6 bg-[#F4EAE6] text-[#3D3B40] w-full pb-50 ">
@@ -39,7 +37,8 @@ const MakeOrder = () => {
         </h2>
         <div className="mt-4 p-5 bg-[#A1C3D1] rounded-lg shadow-sm border border-[#D8A7B1]">
           <p className="text-lg font-medium">
-            Total: <span className="font-bold">NRP {totalAmount.toFixed(2)}</span>
+            Total:{" "}
+            <span className="font-bold">NRP {totalAmount.toFixed(2)}</span>
           </p>
           <p className="text-lg font-medium">
             Discount:{" "}

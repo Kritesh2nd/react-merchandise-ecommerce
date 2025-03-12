@@ -22,10 +22,6 @@ const UserCart = () => {
     getUserCart();
   }, []);
 
-  useEffect(() => {
-    getUserCart();
-  }, [userCart]);
-
   return (
     <div className="p-4 bg-[#F4EAE6] py-6">
       <h2 className="text-2xl font-bold text-[#3D3B40] mb-4  px-6 sm:px-20 md:px-52 lg:px-72">

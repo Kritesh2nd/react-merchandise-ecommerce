@@ -15,6 +15,9 @@ export const updateHandelProduct = () => {
 };
 
 export const HandelProductProvider = ({ children }) => {
+  const envVariable = import.meta.env;
+  // const envVariable = import.meta.env;
+  // const envVariable = import.meta.env.production;
   const { loggedIn, header } = loadSetting();
   const { handelLogout } = updateSetting();
 
@@ -101,7 +104,7 @@ export const HandelProductProvider = ({ children }) => {
       .post(url, { productId: productId }, header)
       .then((res) => {
         getCartCount();
-        getUserCart;
+        getUserCart();
       })
       .catch((err) => {
         console.log("err while adding to cart", err);
@@ -121,6 +124,27 @@ export const HandelProductProvider = ({ children }) => {
       });
   };
 
+  // const makePayment = async (products) => {
+  //   console.log(products);
+  //   console.log("STRIPE_PK", process.env.STRIPE_PK);
+  //   const stripe = await loadStripe("pk_test_");
+  //   //5:00
+  // };
+  const makePayment = (products) => {
+    console.log(products);
+    const { VITE_STRIPE_PK, VITE_STRIPE_SK } = envVariable;
+    console.log(
+      "Environment Variables:",
+      envVariable,
+      VITE_STRIPE_PK,
+      VITE_STRIPE_SK
+    );
+
+    // console.log("STRIPE_PK", process.env.STRIPE_PK);
+    // const stripe = loadStripe("pk_test_");\
+    //5:00
+  };
+
   return (
     <HandelProductContext.Provider
       value={{ searchResult, cartCount, userCart }}
@@ -133,6 +157,7 @@ export const HandelProductProvider = ({ children }) => {
           getCartCount,
           updateCartProductQuantity,
           removeCartProduct,
+          makePayment,
         }}
       >
         {children}
