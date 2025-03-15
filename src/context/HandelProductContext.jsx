@@ -16,8 +16,6 @@ export const updateHandelProduct = () => {
 
 export const HandelProductProvider = ({ children }) => {
   const envVariable = import.meta.env;
-  // const envVariable = import.meta.env;
-  // const envVariable = import.meta.env.production;
   const { loggedIn, header } = loadSetting();
   const { handelLogout } = updateSetting();
 
@@ -130,6 +128,7 @@ export const HandelProductProvider = ({ children }) => {
   //   const stripe = await loadStripe("pk_test_");
   //   //5:00
   // };
+  
   const makePayment = (products) => {
     console.log(products);
     const { VITE_STRIPE_PK, VITE_STRIPE_SK } = envVariable;
@@ -139,10 +138,6 @@ export const HandelProductProvider = ({ children }) => {
       VITE_STRIPE_PK,
       VITE_STRIPE_SK
     );
-
-    // console.log("STRIPE_PK", process.env.STRIPE_PK);
-    // const stripe = loadStripe("pk_test_");\
-    //5:00
   };
 
   return (

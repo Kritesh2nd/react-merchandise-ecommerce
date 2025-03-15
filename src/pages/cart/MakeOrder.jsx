@@ -7,7 +7,7 @@ import {
 
 const MakeOrder = () => {
   // Calculate total price and discount
-  const { userCart } = loadHandelProduct();r
+  const { userCart } = loadHandelProduct();
   const { getUserCart, makePayment } = updateHandelProduct();
   const totalAmount = userCart.reduce(
     (sum, item) => sum + item.price * item.quantity,
