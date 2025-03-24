@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { loadSetting, updateSetting } from "./SettingContext";
 import { showSuccessMessage, showDangerMessage } from "../utils/notification";
+import { loadStripe } from "@stripe/stripe-js";
 
 const HandelProductContext = React.createContext();
 const HandelProductContextUpdate = React.createContext();
@@ -16,8 +17,6 @@ export const updateHandelProduct = () => {
 
 export const HandelProductProvider = ({ children }) => {
   const envVariable = import.meta.env;
-  // const envVariable = import.meta.env;
-  // const envVariable = import.meta.env.production;
   const { loggedIn, header } = loadSetting();
   const { handelLogout } = updateSetting();
 
@@ -124,25 +123,46 @@ export const HandelProductProvider = ({ children }) => {
       });
   };
 
-  // const makePayment = async (products) => {
-  //   console.log(products);
-  //   console.log("STRIPE_PK", process.env.STRIPE_PK);
-  //   const stripe = await loadStripe("pk_test_");
-  //   //5:00
-  // };
   const makePayment = (products) => {
-    console.log(products);
-    const { VITE_STRIPE_PK, VITE_STRIPE_SK } = envVariable;
+    const url = `http://localhost:3000/cart/create-checkout-session`;
+    axios
+      .post(url, products, header)
+      .then((res) => {
+        console.log("res of make paymnet ", res.data);
+      })
+      .catch((err) => {
+        console.log("err while making payment to cart", err);
+      });
+  };
+  const makePaymentOld = async (products) => {
+    const url = `http://localhost:3000/cart/create-checkout-session`;
+    const { VITE_STRIPE_PK } = envVariable;
     console.log(
+      "products",
+      products,
       "Environment Variables:",
       envVariable,
-      VITE_STRIPE_PK,
-      VITE_STRIPE_SK
+      VITE_STRIPE_PK
     );
+    const stripe = await loadStripe(VITE_STRIPE_PK);
+    const body = {
+      products: products,
+    };
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    });
 
-    // console.log("STRIPE_PK", process.env.STRIPE_PK);
-    // const stripe = loadStripe("pk_test_");\
-    //5:00
+    const session = await response.json();
+
+    const result = stripe.redirectToCheckout({ sessionId: session.id });
+    if (result.error) {
+      console.log(result.error);
+    }
   };
 
   return (
