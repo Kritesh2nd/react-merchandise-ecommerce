@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Menu, Search, ShoppingCart, User } from "lucide-react";
+import { List, Menu, Search, ShoppingCart, User } from "lucide-react";
 import { LogOut } from "lucide-react";
 import logo from "../assets/logo/logo.png";
 import AuthForm from "../container/AuthForm";
@@ -80,6 +80,17 @@ export default function Navbar() {
                 <span className="flexmid absolute -bottom-2 -right-2 pb-[1px] pl-[1px] bg-[#F4EAE6] text-inherit duration-300 border border-stone-500 rounded-full h-4 w-4">
                   {cartCount}
                 </span>
+              </div>
+              <div
+                className="relative text-[#3D3B40] hover:text-[#FF6961] bor"
+                onClick={() => {
+                  navigate("/order");
+                }}
+              >
+                <List
+                  className=" cursor-pointer text-inherit transition duration-300 bor"
+                  size={24}
+                />
               </div>
               <User
                 className="text-[#3D3B40] cursor-pointer hover:text-[#FF6961] transition duration-300 hidden md:flex"

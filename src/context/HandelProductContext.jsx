@@ -21,6 +21,7 @@ export const HandelProductProvider = ({ children }) => {
   const [searchResult, setSearchResult] = useState([]);
   const [cartCount, setCartCount] = useState(0);
   const [userCart, setUserCart] = useState([]);
+  const [userOrder, setUserOrder] = useState([]);
 
   const validateToken = (statusCode) => {
     if (statusCode == 498 && loggedIn) {
@@ -125,18 +126,6 @@ export const HandelProductProvider = ({ children }) => {
       });
   };
 
-  // const removeAllUserCartProduct = () => {
-  //   const url = `http://localhost:3000/cart/user-cart-remove-all-product`;
-  //   axios
-  //     .post(url, header, header)
-  //     .then((res) => {
-  //       console.log("res", res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log("err while adding to cart", err);
-  //     });
-  // };
-
   const makePayment = (products) => {
     const url = `http://localhost:3000/cart/create-checkout-session`;
     const orderedItem = products.map((item) => {
@@ -146,12 +135,12 @@ export const HandelProductProvider = ({ children }) => {
           product_data: {
             name: item.title,
           },
-          unit_amount: item.price * 100,
+          unit_amount: Math.trunc(item.price * 100),
         },
         quantity: item.quantity,
       };
     });
-
+    console.log("orderedItem",orderedItem)
     axios
       .post(url, orderedItem, header)
       .then((res) => {
@@ -164,9 +153,26 @@ export const HandelProductProvider = ({ children }) => {
       });
   };
 
+  const getUserOrder = () => {
+    if (!loggedIn) {
+      return;
+    }
+    const url = `http://localhost:3000/cart/user-order-record`;
+    axios
+      .post(url, header, header)
+      .then((res) => {
+        // console.log("user order:", res.data);
+        setUserOrder(res.data);
+      })
+      .catch((err) => {
+        // validateToken(err.status);
+        console.log("err while getting user orde", err);
+      });
+  };
+
   return (
     <HandelProductContext.Provider
-      value={{ searchResult, cartCount, userCart }}
+      value={{ searchResult, cartCount, userCart, userOrder }}
     >
       <HandelProductContextUpdate.Provider
         value={{
@@ -176,8 +182,8 @@ export const HandelProductProvider = ({ children }) => {
           getCartCount,
           updateCartProductQuantity,
           removeCartProduct,
-          // removeAllUserCartProduct,
           makePayment,
+          getUserOrder,
         }}
       >
         {children}

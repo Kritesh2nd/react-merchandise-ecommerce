@@ -41,7 +41,7 @@ export default function PaymentSuccess() {
               </button>
               <button
                 className="flex-1 bg-[#F9D976] hover:bg-[#A1C3D1] text-white rounded-lg px-6 py-2 cursor-pointer"
-                onClick={() => navigate("/orders")}
+                onClick={() => navigate("/order")}
               >
                 View Orders
               </button>
