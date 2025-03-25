@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { loadSetting, updateSetting } from "./SettingContext";
 import { showSuccessMessage, showDangerMessage } from "../utils/notification";
-import { loadStripe } from "@stripe/stripe-js";
 
 const HandelProductContext = React.createContext();
 const HandelProductContextUpdate = React.createContext();
@@ -16,8 +15,7 @@ export const updateHandelProduct = () => {
 };
 
 export const HandelProductProvider = ({ children }) => {
-  const envVariable = import.meta.env;
-  const { loggedIn, header } = loadSetting();
+  const { loggedIn, tokenExipred, header } = loadSetting();
   const { handelLogout } = updateSetting();
 
   const [searchResult, setSearchResult] = useState([]);
@@ -67,6 +65,10 @@ export const HandelProductProvider = ({ children }) => {
     if (!loggedIn) {
       return;
     }
+    // if(tokenExipred){
+    //   handelLogout()
+    // }
+    // console.log("tokenExipred",tokenExipred)
     const url = `http://localhost:3000/cart/get-user-cart`;
     axios
       .post(url, header, header)
@@ -123,46 +125,43 @@ export const HandelProductProvider = ({ children }) => {
       });
   };
 
+  // const removeAllUserCartProduct = () => {
+  //   const url = `http://localhost:3000/cart/user-cart-remove-all-product`;
+  //   axios
+  //     .post(url, header, header)
+  //     .then((res) => {
+  //       console.log("res", res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log("err while adding to cart", err);
+  //     });
+  // };
+
   const makePayment = (products) => {
     const url = `http://localhost:3000/cart/create-checkout-session`;
-    axios
-      .post(url, products, header)
-      .then((res) => {
-        console.log("res of make paymnet ", res.data);
-      })
-      .catch((err) => {
-        console.log("err while making payment to cart", err);
-      });
-  };
-  const makePaymentOld = async (products) => {
-    const url = `http://localhost:3000/cart/create-checkout-session`;
-    const { VITE_STRIPE_PK } = envVariable;
-    console.log(
-      "products",
-      products,
-      "Environment Variables:",
-      envVariable,
-      VITE_STRIPE_PK
-    );
-    const stripe = await loadStripe(VITE_STRIPE_PK);
-    const body = {
-      products: products,
-    };
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    const response = await fetch(url, {
-      method: "POST",
-      headers: headers,
-      body: JSON.stringify(body),
+    const orderedItem = products.map((item) => {
+      return {
+        price_data: {
+          currency: "inr",
+          product_data: {
+            name: item.title,
+          },
+          unit_amount: item.price * 100,
+        },
+        quantity: item.quantity,
+      };
     });
 
-    const session = await response.json();
-
-    const result = stripe.redirectToCheckout({ sessionId: session.id });
-    if (result.error) {
-      console.log(result.error);
-    }
+    axios
+      .post(url, orderedItem, header)
+      .then((res) => {
+        console.log("payment response", res.status);
+        if (res.status != 200) showDangerMessage("Order Failed");
+        window.location.href = res.data.redirectUrl;
+      })
+      .catch((err) => {
+        console.log("err while ordering", err);
+      });
   };
 
   return (
@@ -177,6 +176,7 @@ export const HandelProductProvider = ({ children }) => {
           getCartCount,
           updateCartProductQuantity,
           removeCartProduct,
+          // removeAllUserCartProduct,
           makePayment,
         }}
       >
