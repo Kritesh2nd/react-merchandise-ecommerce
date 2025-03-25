@@ -1,9 +1,18 @@
 import { CheckCircle, ShoppingCart, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+// import { updateHandelProduct } from "../context/HandelProductContext";
+// import { useEffect } from "react";
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();
+
+  // const { removeAllUserCartProduct } = updateHandelProduct();
+
+  // useEffect(() => {
+  //   console.log("removeAllUserCartProduct");
+  //   removeAllUserCartProduct();
+  // }, []);
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#F4EAE6] px-4">
@@ -32,7 +41,7 @@ export default function PaymentSuccess() {
               </button>
               <button
                 className="flex-1 bg-[#F9D976] hover:bg-[#A1C3D1] text-white rounded-lg px-6 py-2 cursor-pointer"
-                onClick={() => navigate("/orders")}
+                onClick={() => navigate("/order")}
               >
                 View Orders
               </button>

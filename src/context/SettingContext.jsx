@@ -23,6 +23,20 @@ export const SettingProvider = ({ children }) => {
   const [displayAuthForm, setDisplayAuthForm] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("userToken") || null);
   const [loggedIn, setLoggedIn] = useState(token ? true : false);
+  const isTokenExpired = (token) => {
+    if (!token) return true; // If no token, consider it expired
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1])); // Decode token payload
+      const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
+      // console.log(payload.exp , currentTime)
+      return payload.exp > currentTime; // Compare expiration time
+    } catch (error) {
+      console.error("Invalid token:", error);
+      return true; // Treat invalid tokens as expired
+    }
+  };
+  const [tokenExipred, setTokenExpired] = useState(isTokenExpired(token));
   const [bearerToken, setBearerToken] = useState(
     token ? `Bearer ${JSON.parse(token)}` : ""
   );
@@ -99,6 +113,7 @@ export const SettingProvider = ({ children }) => {
         displayAuthForm,
         token,
         loggedIn,
+        tokenExipred,
         bearerToken,
         header,
         logoutVisible,

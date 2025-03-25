@@ -21,7 +21,7 @@ export default function PaymentFailed() {
           <div className="flex gap-4 justify-center mt-6">
             <button
               className="bg-[#F9D976] hover:bg-[#D8A7B1] text-white rounded-lg px-6 py-2 flex items-center"
-              onClick={() => navigate("/checkout")}
+              onClick={() => navigate("/cart")}
             >
               <RefreshCcw className="mr-2" size={18} /> Retry Payment
             </button>

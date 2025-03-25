@@ -19,6 +19,7 @@ import Contact from "./pages/Contact";
 import Cart from "./pages/Cart";
 import PaymentSuccess from "./payment/PaymentSuccess";
 import PaymentFailed from "./payment/PaymentFailed";
+import Order from "./pages/Order";
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
                 <Route path="search/:keyword" element={<SearchList />} />
                 <Route path="shop" element={<Shop />} />
                 <Route path="cart" element={<Cart />} />
+                <Route path="order" element={<Order />} />
                 <Route path="payment/success" element={<PaymentSuccess />} />
                 <Route path="payment/failed" element={<PaymentFailed />} />
                 <Route path="/" element={<About />} />

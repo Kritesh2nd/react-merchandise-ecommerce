@@ -27,22 +27,22 @@ const UserCart = () => {
       <h2 className="text-2xl font-bold text-[#3D3B40] mb-4  px-6 sm:px-20 md:px-52 lg:px-72">
         Shopping Cart
       </h2>
-      <div className="flex flex-col gap-4 overflow-x-auto whitespace-nowrap px-6 sm:px-20 md:px-52 lg:px-72">
+      <div className="flex flex-col gap-4 overflow-x-auto whitespace-nowrap px-6 sm:px-6 md:px-20 lg:px-60">
         {userCart && userCart.length == 0 && <div>No Products in Cart</div>}
         {userCart &&
           userCart.map((product) => (
             <div
               key={product.id}
-              className="flex bg-white p-4 rounded-2xl shadow-md gap-4 items-center min-w-[350px]"
+              className="flex bg-white p-4 rounded-2xl shadow-md gap-4 items-center min-w-[350px] "
             >
-              <div className="w-50">
+              <div className="flex grow-4  md:grow-3 basis-1 min-w-0">
                 <img
                   src={product.imageUrl}
                   alt={product.title}
                   className="w-full h-40 object-cover rounded-lg"
                 />
               </div>
-              <div className="flex flex-col bor w-full">
+              <div className="flex grow-10 basis-1 min-w-0 flex-col overflow-hidden">
                 <h3 className="text-lg font-semibold text-[#3D3B40]">
                   {product.title}
                 </h3>
