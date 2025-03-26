@@ -8,7 +8,7 @@ export default function AuthForm() {
   const { displayAuthForm } = loadSetting();
   const { toggleDisplayAuthForm, loginUser, createUser } = updateSetting();
   const [formData, setFormData] = useState({
-    email: "apple@gmail.com ",
+    email: "admin@gmail.com ",
     password: "password",
     name: "",
   });

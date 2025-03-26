@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { List, Menu, Search, ShoppingCart, User } from "lucide-react";
 import { LogOut } from "lucide-react";
 import logo from "../assets/logo/logo.png";
@@ -13,7 +13,7 @@ import {
 
 export default function Navbar() {
   const navigate = useNavigate();
-  const { loggedIn } = loadSetting();
+  const { loggedIn, isAdmin } = loadSetting();
   const { toggleDisplayAuthForm, toggleLogoutVisible } = updateSetting();
   const { cartCount } = loadHandelProduct();
   const { getUserCart, getCartCount } = updateHandelProduct();
@@ -22,7 +22,7 @@ export default function Navbar() {
   useEffect(() => {
     getCartCount();
     getUserCart();
-  }, [loggedIn]);
+  }, [loggedIn, isAdmin]);
 
   const handelSearch = (e) => {
     if (e.target.value == "") {
@@ -52,6 +52,11 @@ export default function Navbar() {
           <li className="hover:text-[#D8A7B1] transition duration-300 cursor-pointer">
             <Link to="/contact">Contact</Link>
           </li>
+          {isAdmin && (
+            <li className="hover:text-[#D8A7B1] transition duration-300 cursor-pointer">
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
+          )}
         </ul>
 
         {/* Search & Cart/Profile */}
