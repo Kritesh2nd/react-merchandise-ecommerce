@@ -24,19 +24,29 @@ export const SettingProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("userToken") || null);
   const [loggedIn, setLoggedIn] = useState(token ? true : false);
   const isTokenExpired = (token) => {
-    if (!token) return true; // If no token, consider it expired
-
+    if (!token) return true;
     try {
-      const payload = JSON.parse(atob(token.split(".")[1])); // Decode token payload
-      const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
-      // console.log(payload.exp , currentTime)
-      return payload.exp > currentTime; // Compare expiration time
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const currentTime = Math.floor(Date.now() / 1000);
+      return payload.exp > currentTime;
     } catch (error) {
       console.error("Invalid token:", error);
-      return true; // Treat invalid tokens as expired
+      return true;
     }
   };
   const [tokenExipred, setTokenExpired] = useState(isTokenExpired(token));
+  function hasAdminRole(jwtToken) {
+    try {
+      const tokenParts = jwtToken.split(".");
+      if (tokenParts.length !== 3) return false;
+
+      const payload = JSON.parse(atob(tokenParts[1]));
+      return Array.isArray(payload.roles) && payload.roles.includes("admin");
+    } catch (error) {
+      return false;
+    }
+  }
+  const [isAdmin, setIsAdmin] = useState(hasAdminRole(token));
   const [bearerToken, setBearerToken] = useState(
     token ? `Bearer ${JSON.parse(token)}` : ""
   );
@@ -84,6 +94,7 @@ export const SettingProvider = ({ children }) => {
       .then((res) => {
         if (res.status == 200) {
           localStorage.setItem("userToken", JSON.stringify(res.data.token));
+          setIsAdmin(hasAdminRole(res.data.token));
           showSuccessMessage("Logged In Successfully");
           refreshValues();
           setLoggedIn(true);
@@ -103,6 +114,7 @@ export const SettingProvider = ({ children }) => {
     refreshValues();
     navigate("/");
     setLogoutVisible(false);
+    setIsAdmin(false);
     showInfoMessage("Logged Out Successfully");
     // window.location.reload();
   };
@@ -114,6 +126,7 @@ export const SettingProvider = ({ children }) => {
         token,
         loggedIn,
         tokenExipred,
+        isAdmin,
         bearerToken,
         header,
         logoutVisible,
