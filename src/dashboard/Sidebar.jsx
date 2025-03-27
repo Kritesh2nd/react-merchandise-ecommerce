@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../assets/logo/logo.png";
 import { sidebar } from "../constant";
 import { ChevronDown, ChevronRight } from "lucide-react";
@@ -43,87 +43,60 @@ const SideTrunk = ({ item, handelSideButton }) => {
 };
 
 const Sidebar = () => {
+  const [sidebarBool, setSidebarBool] = useState(true);
   const [sidebarCopy, setSidebarCopy] = useState(sidebar);
 
+  const toggleSidebarBool = () => setSidebarBool((prev) => !prev);
+
   const handelSideButton = (item) => {
-    // console.log("item", item);
-    if (item.mainItem) {
-      // console.log("main item");
-      const newSidebar = sidebarCopy.filter((filterItem) => filterItem != item);
-      const processedSidebar = [...newSidebar, { ...item, open: !item.open }];
-      const sortedSidebar = processedSidebar.sort(
-        (a, b) => a.serialId - b.serialId
-      );
+    const newSidebar = item.mainItem
+      ? sidebarCopy.map((filterItem) =>
+          filterItem === item ? { ...item, open: !item.open } : filterItem
+        )
+      : sidebarCopy;
 
-      handelSidebarSelection(sortedSidebar, item);
-
-      setSidebarCopy(sortedSidebar);
-    }
-    if (!item.mainItem) {
-      const serialId = Math.floor(item.serialId / 10) * 10;
-
-      const mainSublistRemoveSelection = unselectSidebar(sidebarCopy)
-      const selectedSidebar = mainSublistRemoveSelection.filter(
-        (item) => item.serialId == serialId
-      );
-      const unselectedSidebar = mainSublistRemoveSelection.filter(
-        (item) => item.serialId != serialId
-      );
-
-      const remainingSublistSidebar = mainSublistRemoveSelection.filter(
-        (item) => item.serialId == (serialId == 20 ? 30 : 20)
-      );
-      
-      const remainingSublistSidebarRemoveSelection = {
-        ...remainingSublistSidebar[0],
-        subList: unselectSidebar(remainingSublistSidebar[0].subList),
-      };
-
-      
-      const processedSidebar = handelSidebarSelection(
-        selectedSidebar[0].subList,
-        item
-      );
-
-      const mergeSidebar = [
-        ...unselectedSidebar,
-        { ...selectedSidebar[0], subList: processedSidebar },
-      ];
-      console.log(
-        "remainingSublistSidebarRemoveSelection",
-        remainingSublistSidebarRemoveSelection
-      );
-      const sortedSidebar = mergeSidebar.sort(
-        (a, b) => a.serialId - b.serialId
-      );
-      setSidebarCopy(sortedSidebar);
-    }
+    const selectedSidebar = handelSidebarSelection(newSidebar, item);
+    setSidebarCopy(
+      [...selectedSidebar].sort((a, b) => a.serialId - b.serialId)
+    );
+    toggleSidebarBool();
   };
 
-  const unselectSidebar = (itemArray) => {
-    const unselectItemArray = itemArray.map((mapItem) => {
-      mapItem.selected = false;
-      return mapItem;
-    });
-    return unselectItemArray;
+  const unselectSidebar = (sidebarList) => {
+    return sidebarList
+      .map((item) => ({
+        ...item,
+        selected: false,
+        subList: item.subList.map((subItem) => ({
+          ...subItem,
+          selected: false,
+        })),
+      }))
+      .sort((a, b) => a.serialId - b.serialId);
   };
 
-  const handelSidebarSelection = (itemArray, selectedItem) => {
-    const unselectItemArray = itemArray.map((mapItem) => {
-      mapItem.selected = false;
-      return mapItem;
-    });
+  const handelSidebarSelection = (sidebarList, selectedItem) => {
+    const updatedSidebar = unselectSidebar(sidebarList);
 
-    const selectSidebar = unselectItemArray.map((item) => {
-      if (item.serialId == selectedItem.serialId) {
-        item.selected = true;
+    return updatedSidebar.map((item) => {
+      if (item.serialId === selectedItem.serialId) {
+        return { ...item, selected: true };
+      }
+      if (!selectedItem.mainItem) {
+        return {
+          ...item,
+          subList: item.subList.map((subItem) =>
+            subItem.serialId === selectedItem.serialId
+              ? { ...subItem, selected: true }
+              : subItem
+          ),
+        };
       }
       return item;
     });
-
-    const sortedSidebar = selectSidebar.sort((a, b) => a.serialId - b.serialId);
-    return sortedSidebar;
   };
+
+  useEffect(() => {}, [sidebarCopy, sidebarBool]);
 
   return (
     <div className="flex pt-6 flex-col h-full w-full bor">
