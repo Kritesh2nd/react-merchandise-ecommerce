@@ -20,6 +20,18 @@ import Cart from "./pages/Cart";
 import PaymentSuccess from "./payment/PaymentSuccess";
 import PaymentFailed from "./payment/PaymentFailed";
 import Order from "./pages/Order";
+import ViewSales from "./dashboard/analytics/ViewSales";
+import ViewRevenue from "./dashboard/analytics/ViewRevenue";
+import BestSelling from "./dashboard/analytics/BestSelling";
+import LowStock from "./dashboard/analytics/LowStock";
+import ProductAdd from "./dashboard/product/ProductAdd";
+import ProductList from "./dashboard/product/ProductList";
+import ProductDetail from "./dashboard/product/ProductDetail";
+import ProductUpdate from "./dashboard/product/ProductUpdate";
+import OrderList from "./dashboard/order/OrderList";
+import OrderDetail from "./dashboard/order/OrderDetail";
+import CustomerList from "./dashboard/customer/CustomerList";
+import ProductStock from "./dashboard/product/ProductStock";
 
 const App = () => {
   return (
@@ -43,7 +55,36 @@ const App = () => {
                 <Route path="/" element={<Service />} />
                 <Route path="contact" element={<Contact />} />
                 <Route path="color" element={<ColorPalette />} />
-                <Route path="dashboard" element={<Dashboard />}></Route>
+                <Route path="dashboard" element={<Dashboard />}>
+                  <Route path="analytics/sales" element={<ViewSales />} />
+                  <Route path="analytics/revenue" element={<ViewRevenue />} />
+                  <Route
+                    path="analytics/best-selling"
+                    element={<BestSelling />}
+                  />
+                  <Route
+                    path="analytics/low-stock"
+                    element={<LowStock />}
+                  />
+                  <Route path="product/add" element={<ProductAdd />} />
+                  <Route
+                    path="product/detail/:id"
+                    element={<ProductDetail />}
+                  />
+                  <Route path="product/list" element={<ProductList />} />
+                  <Route
+                    path="product/update/:id"
+                    element={<ProductUpdate />}
+                  />
+                  <Route
+                    path="product/stock"
+                    element={<ProductStock />}
+                  />
+                  <Route path="order/list" element={<OrderList />} />
+                  <Route path="order/detail/:id" element={<OrderDetail />} />
+                  <Route path="customer/list" element={<CustomerList />} />
+                  <Route path="*" element={<NotFound />} />
+                </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </HandelProductProvider>
