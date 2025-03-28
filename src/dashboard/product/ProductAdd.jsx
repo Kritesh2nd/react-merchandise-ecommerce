@@ -10,20 +10,34 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+
+import {
+  showSuccessMessage,
+  showInfoMessage,
+  showDangerMessage,
+} from "../../utils/notification";
+import React from "react";
+import { updateProduct } from "../../context/ProductContext";
 
 const typeOptions = ["Bag", "Figurine", "Hat", "Hoodie", "Poster", "T-Shirt"];
 
 export default function ProductAdd() {
+  const { addProductWithImage } = updateProduct();
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    game: "",
-    genre: "",
-    type: "",
-    price: "",
-    quantity: "",
-    discount: "",
+    title: "Apple",
+    description: "a for apple",
+    game: "apple",
+    genre: "fruit",
+    type: "food",
+    price: "10",
+    quantity: "66",
+    discount: "1",
     image: null,
+    rating: 0,
+    code: "",
+    featured: false,
+    soldAmount: 0,
   });
   const [imagePreview, setImagePreview] = useState(null);
 
@@ -44,9 +58,31 @@ export default function ProductAdd() {
     setImagePreview(null);
   };
 
+  const handelFeatureCheck = () => {
+    setFormData({ ...formData, featured: !formData.featured });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    if (formData.image == null) {
+      showInfoMessage("Please upload image");
+      return;
+    }
+
+    const formDataCopy = { ...formData };
+    delete formDataCopy.image;
+    const newFormData = new FormData();
+    const reportRequestBlob = new Blob([JSON.stringify(formDataCopy)], {
+      type: "application/json",
+    });
+    newFormData.append("image", formData.image);
+    newFormData.append("productData", reportRequestBlob, "productData.json");
+    console.log("start loop");
+    for (let [key, value] of newFormData.entries()) {
+      console.log("key value of form data:", key, value);
+    }
+    console.log("end loop");
+    addProductWithImage(newFormData);
   };
 
   return (
@@ -93,6 +129,7 @@ export default function ProductAdd() {
               onValueChange={(value) =>
                 setFormData({ ...formData, type: value })
               }
+              required
             >
               <SelectTrigger className="borx2 w-[300px]">
                 <SelectValue placeholder="Select Type" />
@@ -114,6 +151,19 @@ export default function ProductAdd() {
               onChange={handleChange}
               required
             />
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="featureCheckbox"
+                checked={formData.featured}
+                onCheckedChange={handelFeatureCheck}
+              />
+              <label
+                htmlFor="featureCheckbox"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Feature
+              </label>
+            </div>
           </div>
           <div className="flex gap-4">
             <Input

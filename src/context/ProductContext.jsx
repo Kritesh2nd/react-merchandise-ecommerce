@@ -22,6 +22,21 @@ export const ProductProvider = ({ children }) => {
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [discountedProducts, setDiscountedProducts] = useState([]);
 
+  //localhost:3000/api/add-product-image
+  const addProductWithImage = (formData) => {
+    const url = `http://localhost:3000/api/add-product-image`;
+    axios
+      .post(url, formData,  {headers: {
+        "Content-Type": "multipart/form-data", // Allow FormData to set boundary4
+        Authorization: bearerToken,
+      }})
+      .then((res) => {
+        console.log("productr added:", res.data);
+      })
+      .catch((err) => {
+        console.log("err while adding product with image", err);
+      });
+  };
   const getProductList = () => {
     const url = `http://localhost:3000/api/products`;
     axios
@@ -95,6 +110,7 @@ export const ProductProvider = ({ children }) => {
     >
       <ProductContextUpdate.Provider
         value={{
+          addProductWithImage,
           getProductList,
           getProductById,
           getFeaturedProducts,
