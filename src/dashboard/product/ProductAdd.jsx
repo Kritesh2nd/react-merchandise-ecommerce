@@ -68,20 +68,16 @@ export default function ProductAdd() {
       showInfoMessage("Please upload image");
       return;
     }
-
     const formDataCopy = { ...formData };
     delete formDataCopy.image;
     const newFormData = new FormData();
     const reportRequestBlob = new Blob([JSON.stringify(formDataCopy)], {
       type: "application/json",
     });
+    const reportRequestBlob2 = JSON.stringify(formDataCopy);
     newFormData.append("image", formData.image);
-    newFormData.append("productData", reportRequestBlob, "productData.json");
-    console.log("start loop");
-    for (let [key, value] of newFormData.entries()) {
-      console.log("key value of form data:", key, value);
-    }
-    console.log("end loop");
+    newFormData.append("productData", reportRequestBlob2);
+
     addProductWithImage(newFormData);
   };
 

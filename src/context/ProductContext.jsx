@@ -26,10 +26,12 @@ export const ProductProvider = ({ children }) => {
   const addProductWithImage = (formData) => {
     const url = `http://localhost:3000/api/add-product-image`;
     axios
-      .post(url, formData,  {headers: {
-        "Content-Type": "multipart/form-data", // Allow FormData to set boundary4
-        Authorization: bearerToken,
-      }})
+      .post(url, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: bearerToken,
+        },
+      })
       .then((res) => {
         console.log("productr added:", res.data);
       })
