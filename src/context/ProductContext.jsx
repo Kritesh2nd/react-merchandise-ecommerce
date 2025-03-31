@@ -21,6 +21,12 @@ export const ProductProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("userToken") || null);
   const bearerToken = token ? `Bearer ${JSON.parse(token)}` : "";
   const header = { headers: { Authorization: bearerToken } };
+  const secondHeader = {
+    headers: {
+      "Content-Type": "multipart/form-data",
+      Authorization: bearerToken,
+    },
+  };
   const [productList, setProductList] = useState([]);
   const [productDetail, setProductDetail] = useState(null);
   const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -38,7 +44,6 @@ export const ProductProvider = ({ children }) => {
         },
       })
       .then((res) => {
-        console.log("productr added:", res.data);
         showSuccessMessage("Product Added successfully");
       })
       .catch((err) => {
@@ -46,6 +51,24 @@ export const ProductProvider = ({ children }) => {
         showDangerMessage("Failed to Add product");
       });
   };
+
+  const updateProductWithImage = (formData, updateImage, productId) => {
+    const updateProductDataOnly = `http://localhost:3000/api/update-product/${productId}`;
+    const updateProductDataWithImage = `http://localhost:3000/api/update-product-image`;
+    const url = updateImage
+      ? updateProductDataWithImage
+      : updateProductDataOnly;
+    axios
+      .post(url, formData, updateImage ? secondHeader : header)
+      .then((res) => {
+        showSuccessMessage("Product Updated successfully");
+      })
+      .catch((err) => {
+        console.log("err while adding updating with or without image", err);
+        showDangerMessage("Failed to Update product");
+      });
+  };
+
   const getProductList = () => {
     const url = `http://localhost:3000/api/products`;
     axios
@@ -120,6 +143,7 @@ export const ProductProvider = ({ children }) => {
       <ProductContextUpdate.Provider
         value={{
           addProductWithImage,
+          updateProductWithImage,
           getProductList,
           getProductById,
           getFeaturedProducts,

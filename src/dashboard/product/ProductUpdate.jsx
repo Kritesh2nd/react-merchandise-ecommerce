@@ -3,52 +3,47 @@ import { X, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useParams } from "react-router-dom";
-import { loadProduct, updateProduct } from "../../context/ProductContext";
 
-const ProductUpdate = () => {
+import { showInfoMessage } from "../../utils/notification";
+import { loadProduct, updateProduct } from "../../context/ProductContext";
+import { useParams } from "react-router-dom";
+
+const typeOptions = ["Bag", "Figurine", "Hat", "Hoodie", "Poster", "T-Shirt"];
+const codeOptions = [
+  { name: "Bag", code: "BAG" },
+  { name: "Figurine", code: "FIG" },
+  { name: "Hat", code: "HAT" },
+  { name: "Hoodie", code: "HOD" },
+  { name: "Poster", code: "POS" },
+  { name: "T-Shirt", code: "TSS" },
+  { name: "All", code: "ALL" },
+];
+
+export default function ProductUpdate() {
   const { id } = useParams();
   const { productDetail } = loadProduct();
-  const { getProductById } = updateProduct();
-  const typeOptions = [
-    "Bag",
-    "Figurine",
-    "Hat",
-    "Hoodie",
-    "Poster",
-    "T-Shirt",
-    "None",
-  ];
-  const [selectedType, setSelectedType] = useState(
-    typeOptions[typeOptions.length - 1]
-  );
-  const [imagePreview, setImagePreview] = useState(null);
-
+  const { getProductById, updateProductWithImage } = updateProduct();
   const [formData, setFormData] = useState({
-    id: productDetail ? productDetail.id : "",
-    code: productDetail ? productDetail.code : "",
-    type: productDetail ? productDetail.type : "",
-    title: productDetail ? productDetail.title : "",
-    description: productDetail ? productDetail.description : "",
-    game: productDetail ? productDetail.game : "",
-    genre: productDetail ? productDetail.genre : "",
-    imageUrl: productDetail ? productDetail.imageUrl : "",
-    featured: false,
-    rating: productDetail ? productDetail.rating : 0,
-    price: productDetail ? productDetail.price : 0,
-    quantity: productDetail ? productDetail.quantity : 0,
-    discount: productDetail ? productDetail.discount : 0,
-    soldAmount: productDetail ? productDetail.soldAmount : 0,
+    title: "",
+    description: "",
+    game: "",
+    genre: "",
+    type: "",
+    price: "",
+    quantity: "",
+    discount: "",
     image: null,
+    rating: "",
+    code: "",
+    featured: false,
+    soldAmount: 0,
   });
+
+  const [imagePreview, setImagePreview] = useState(null);
+  const printt = () => {
+    console.log("formData", formData);
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -71,9 +66,32 @@ const ProductUpdate = () => {
     setFormData({ ...formData, featured: !formData.featured });
   };
 
+  const handelOptionSelect = (event) => {
+    const value = event.target.value;
+    const tempCode =
+      codeOptions.find((item) => item.name === value)?.code || "";
+    setFormData({ ...formData, type: value, code: tempCode });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("update form", formData);
+    const formDataCopy = { ...formData };
+    delete formDataCopy.image;
+    const newFormData = new FormData();
+    let reportRequestBlob;
+    if (formData.image == null) {
+      delete formDataCopy.image;
+      let reportRequestBlob = new Blob([JSON.stringify(formDataCopy)], {
+        type: "application/json",
+      });
+      newFormData.append("productData", reportRequestBlob, "data.json");
+      updateProductWithImage(formDataCopy, false, formData.id);
+    } else {
+      reportRequestBlob = JSON.stringify(formDataCopy);
+      newFormData.append("image", formData.image);
+      newFormData.append("productData", reportRequestBlob);
+      updateProductWithImage(newFormData, true, formData.id);
+    }
   };
 
   useEffect(() => {
@@ -83,26 +101,24 @@ const ProductUpdate = () => {
   useEffect(() => {
     setFormData({
       id: productDetail ? productDetail.id : "",
-      code: productDetail ? productDetail.code : "",
-      type: productDetail ? productDetail.type : "",
+      imageUrl: productDetail ? productDetail.imageUrl : "",
       title: productDetail ? productDetail.title : "",
       description: productDetail ? productDetail.description : "",
       game: productDetail ? productDetail.game : "",
       genre: productDetail ? productDetail.genre : "",
-      imageUrl: productDetail ? productDetail.imageUrl : "",
-      featured: productDetail ? productDetail.featured : false,
-      rating: productDetail ? productDetail.rating : 0,
-      price: productDetail ? productDetail.price : 0,
-      quantity: productDetail ? productDetail.quantity : 0,
-      discount: productDetail ? productDetail.discount : 0,
-      soldAmount: productDetail ? productDetail.soldAmount : 0,
+      type: productDetail ? productDetail.type : "",
+      price: productDetail ? productDetail.price : "",
+      quantity: productDetail ? productDetail.quantity : "",
+      discount: productDetail ? productDetail.discount : "",
       image: null,
+      rating: productDetail ? productDetail.rating : "",
+      code: productDetail ? productDetail.code : "",
+      featured: productDetail ? productDetail.featured : false,
+      soldAmount: productDetail ? productDetail.soldAmount : "",
     });
     setImagePreview(productDetail ? productDetail.imageUrl : null);
-    setSelectedType(productDetail ? "Hat" : "Poster");
   }, [productDetail]);
 
-  useEffect(() => {}, [formData, selectedType]);
   return (
     <div className="p-6 bg-[#f9f9f9] h-full  overflow-auto ">
       <div className="bor w-2/3">
@@ -140,36 +156,45 @@ const ProductUpdate = () => {
             onChange={handleChange}
             required
           />
-
-          <div className="flex gap-4">
-            <Select
-              className="w-[300px]"
-              defaultValue={selectedType}
-              onValueChange={(value) =>
-                setFormData({ ...formData, type: value })
-              }
-            >
-              <SelectTrigger className="borx2 w-[300px]">
-                <SelectValue placeholder="Select Type" />
-              </SelectTrigger>
-              <SelectContent>
+          <div className="flex justify-between gap-4 bor">
+            <div className="flex px-3 rounded-md borx2 ">
+              <select
+                name="onChange"
+                className={`${
+                  formData.type == "" ? "text-stone-400" : "text-stone-900"
+                }`}
+                onInput={handelOptionSelect}
+                required
+              >
+                <option
+                  className="flex items-center px-3  h-full w-full text-stone-900"
+                  value=""
+                >
+                  Select an option
+                </option>
                 {typeOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
+                  <option
+                    className="flex items-center px-3 h-full w-full text-stone-900"
+                    key={option}
+                    value={option}
+                  >
                     {option}
-                  </SelectItem>
+                  </option>
                 ))}
-              </SelectContent>
-            </Select>
-            <Input
-              type="number"
-              className="borx2 w-[300px]"
-              placeholder="Quantity"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleChange}
-              required
-            />
-            <div className="flex items-center gap-2">
+              </select>
+            </div>
+            <div className="flex bor">
+              <Input
+                type="number"
+                className="borx2"
+                placeholder="Quantity"
+                name="quantity"
+                value={formData.quantity}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="flex items-center gap-2 bor">
               <Checkbox
                 id="featureCheckbox"
                 checked={formData.featured}
@@ -183,6 +208,7 @@ const ProductUpdate = () => {
               </label>
             </div>
           </div>
+
           <div className="flex gap-4">
             <Input
               type="number"
@@ -241,11 +267,12 @@ const ProductUpdate = () => {
             >
               Submit
             </Button>
+            <div className="borx px-10 py-2 none" onClick={printt}>
+              print
+            </div>
           </div>
         </form>
       </div>
     </div>
   );
-};
-
-export default ProductUpdate;
+}
