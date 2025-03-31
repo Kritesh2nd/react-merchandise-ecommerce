@@ -1,23 +1,11 @@
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { X, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectTrigger,
-  SelectValue,
-  SelectContent,
-  SelectItem,
-} from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import {
-  showSuccessMessage,
-  showInfoMessage,
-  showDangerMessage,
-} from "../../utils/notification";
-import React from "react";
+import { showInfoMessage } from "../../utils/notification";
 import { updateProduct } from "../../context/ProductContext";
 
 const typeOptions = ["Bag", "Figurine", "Hat", "Hoodie", "Poster", "T-Shirt"];
@@ -32,24 +20,20 @@ const codeOptions = [
 ];
 
 export default function ProductAdd() {
-  // typeOptions.forEach((item) => {
-  //   console.log(`{name:"${item}",code:"${item}"},`);
-  // });
-
   const { addProductWithImage } = updateProduct();
   const [formData, setFormData] = useState({
-    title: "Hello",
-    description: "h for hello",
-    game: "hello kitty",
-    genre: "game",
+    title: "",
+    description: "",
+    game: "",
+    genre: "",
     type: "",
-    price: 2200,
-    quantity: 34,
-    discount: 5,
+    price: "",
+    quantity: "",
+    discount: "",
     image: null,
-    rating: 5,
-    code: "POS",
-    featured: true,
+    rating: "",
+    code: "",
+    featured: false,
     soldAmount: 0,
   });
 
@@ -103,23 +87,13 @@ export default function ProductAdd() {
 
   const handelOptionSelect = (event) => {
     const value = event.target.value;
-    console.log("handelOptionSelect value:", value);
     const tempCode =
       codeOptions.find((item) => item.name === value)?.code || "";
     setFormData({ ...formData, type: value, code: tempCode });
-    console.log("{ ...formData, type: value }", {
-      ...formData,
-      type: value,
-      code: tempCode,
-    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // if (formData.type == "") {
-    //   showInfoMessage("Please select a type");
-    //   return;
-    // }
     if (formData.image == null) {
       showInfoMessage("Please upload image");
       return;
@@ -134,13 +108,9 @@ export default function ProductAdd() {
     newFormData.append("image", formData.image);
     newFormData.append("productData", reportRequestBlob2);
 
-    // addProductWithImage(newFormData);
+    addProductWithImage(newFormData);
     clearForm();
   };
-
-  useEffect(() => {
-    console.log("key", key, "formData:", formData);
-  }, [key, formData]);
 
   return (
     <div className="p-6 bg-[#f9f9f9] h-full  overflow-auto ">
@@ -290,7 +260,7 @@ export default function ProductAdd() {
             >
               Submit
             </Button>
-            <div className="borx px-10 py-2 non" onClick={printt}>
+            <div className="borx px-10 py-2 none" onClick={printt}>
               print
             </div>
           </div>
