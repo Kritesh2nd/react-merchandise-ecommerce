@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -21,25 +21,64 @@ import React from "react";
 import { updateProduct } from "../../context/ProductContext";
 
 const typeOptions = ["Bag", "Figurine", "Hat", "Hoodie", "Poster", "T-Shirt"];
+const codeOptions = [
+  { name: "Bag", code: "BAG" },
+  { name: "Figurine", code: "FIG" },
+  { name: "Hat", code: "HAT" },
+  { name: "Hoodie", code: "HOD" },
+  { name: "Poster", code: "POS" },
+  { name: "T-Shirt", code: "TSS" },
+  { name: "All", code: "ALL" },
+];
 
 export default function ProductAdd() {
+  // typeOptions.forEach((item) => {
+  //   console.log(`{name:"${item}",code:"${item}"},`);
+  // });
+
   const { addProductWithImage } = updateProduct();
   const [formData, setFormData] = useState({
-    title: "Apple",
-    description: "a for apple",
-    game: "apple",
-    genre: "fruit",
-    type: "food",
-    price: "10",
-    quantity: "66",
-    discount: "1",
+    title: "Hello",
+    description: "h for hello",
+    game: "hello kitty",
+    genre: "game",
+    type: "",
+    price: 2200,
+    quantity: 34,
+    discount: 5,
     image: null,
-    rating: 0,
-    code: "",
-    featured: false,
+    rating: 5,
+    code: "POS",
+    featured: true,
     soldAmount: 0,
   });
+
   const [imagePreview, setImagePreview] = useState(null);
+  const [key, setKey] = useState(0);
+  const clearForm = () => {
+    setImagePreview(null);
+    handelOptionSelect({ target: { value: "" } });
+    setFormData({
+      title: "",
+      description: "",
+      game: "",
+      genre: "",
+      type: "",
+      price: "",
+      quantity: "",
+      discount: "",
+      image: null,
+      rating: "",
+      code: "",
+      featured: false,
+      soldAmount: 0,
+    });
+    setKey(key + 1);
+  };
+
+  const printt = () => {
+    console.log("formData", formData);
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -62,8 +101,25 @@ export default function ProductAdd() {
     setFormData({ ...formData, featured: !formData.featured });
   };
 
+  const handelOptionSelect = (event) => {
+    const value = event.target.value;
+    console.log("handelOptionSelect value:", value);
+    const tempCode =
+      codeOptions.find((item) => item.name === value)?.code || "";
+    setFormData({ ...formData, type: value, code: tempCode });
+    console.log("{ ...formData, type: value }", {
+      ...formData,
+      type: value,
+      code: tempCode,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    // if (formData.type == "") {
+    //   showInfoMessage("Please select a type");
+    //   return;
+    // }
     if (formData.image == null) {
       showInfoMessage("Please upload image");
       return;
@@ -78,8 +134,13 @@ export default function ProductAdd() {
     newFormData.append("image", formData.image);
     newFormData.append("productData", reportRequestBlob2);
 
-    addProductWithImage(newFormData);
+    // addProductWithImage(newFormData);
+    clearForm();
   };
+
+  useEffect(() => {
+    console.log("key", key, "formData:", formData);
+  }, [key, formData]);
 
   return (
     <div className="p-6 bg-[#f9f9f9] h-full  overflow-auto ">
@@ -118,36 +179,45 @@ export default function ProductAdd() {
             onChange={handleChange}
             required
           />
-
-          <div className="flex gap-4">
-            <Select
-              className="w-[300px]"
-              onValueChange={(value) =>
-                setFormData({ ...formData, type: value })
-              }
-              required
-            >
-              <SelectTrigger className="borx2 w-[300px]">
-                <SelectValue placeholder="Select Type" />
-              </SelectTrigger>
-              <SelectContent>
+          <div className="flex justify-between gap-4 bor">
+            <div className="flex px-3 rounded-md borx2 ">
+              <select
+                name="onChange"
+                className={`${
+                  formData.type == "" ? "text-stone-400" : "text-stone-900"
+                }`}
+                onInput={handelOptionSelect}
+                required
+              >
+                <option
+                  className="flex items-center px-3  h-full w-full text-stone-900"
+                  value=""
+                >
+                  Select an option
+                </option>
                 {typeOptions.map((option) => (
-                  <SelectItem key={option} value={option}>
+                  <option
+                    className="flex items-center px-3 h-full w-full text-stone-900"
+                    key={option}
+                    value={option}
+                  >
                     {option}
-                  </SelectItem>
+                  </option>
                 ))}
-              </SelectContent>
-            </Select>
-            <Input
-              type="number"
-              className="borx2 w-[300px]"
-              placeholder="Quantity"
-              name="quantity"
-              value={formData.quantity}
-              onChange={handleChange}
-              required
-            />
-            <div className="flex items-center gap-2">
+              </select>
+            </div>
+            <div className="flex bor">
+              <Input
+                type="number"
+                className="borx2"
+                placeholder="Quantity"
+                name="quantity"
+                value={formData.quantity}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="flex items-center gap-2 bor">
               <Checkbox
                 id="featureCheckbox"
                 checked={formData.featured}
@@ -161,6 +231,7 @@ export default function ProductAdd() {
               </label>
             </div>
           </div>
+
           <div className="flex gap-4">
             <Input
               type="number"
@@ -219,6 +290,9 @@ export default function ProductAdd() {
             >
               Submit
             </Button>
+            <div className="borx px-10 py-2 non" onClick={printt}>
+              print
+            </div>
           </div>
         </form>
       </div>

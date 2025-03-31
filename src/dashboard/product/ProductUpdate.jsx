@@ -10,6 +10,7 @@ import {
   SelectContent,
   SelectItem,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useParams } from "react-router-dom";
 import { loadProduct, updateProduct } from "../../context/ProductContext";
 
@@ -66,9 +67,13 @@ const ProductUpdate = () => {
     setImagePreview(null);
   };
 
+  const handelFeatureCheck = () => {
+    setFormData({ ...formData, featured: !formData.featured });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(formData);
+    console.log("update form", formData);
   };
 
   useEffect(() => {
@@ -85,7 +90,7 @@ const ProductUpdate = () => {
       game: productDetail ? productDetail.game : "",
       genre: productDetail ? productDetail.genre : "",
       imageUrl: productDetail ? productDetail.imageUrl : "",
-      featured: false,
+      featured: productDetail ? productDetail.featured : false,
       rating: productDetail ? productDetail.rating : 0,
       price: productDetail ? productDetail.price : 0,
       quantity: productDetail ? productDetail.quantity : 0,
@@ -97,9 +102,7 @@ const ProductUpdate = () => {
     setSelectedType(productDetail ? "Hat" : "Poster");
   }, [productDetail]);
 
-  useEffect(() => {
-    console.log("formData", formData, "selectedType", selectedType);
-  }, [formData, selectedType]);
+  useEffect(() => {}, [formData, selectedType]);
   return (
     <div className="p-6 bg-[#f9f9f9] h-full  overflow-auto ">
       <div className="bor w-2/3">
@@ -166,6 +169,19 @@ const ProductUpdate = () => {
               onChange={handleChange}
               required
             />
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="featureCheckbox"
+                checked={formData.featured}
+                onCheckedChange={handelFeatureCheck}
+              />
+              <label
+                htmlFor="featureCheckbox"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Feature
+              </label>
+            </div>
           </div>
           <div className="flex gap-4">
             <Input

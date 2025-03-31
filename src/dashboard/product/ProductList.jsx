@@ -75,7 +75,8 @@ export default function ProductList() {
                 <td className="border border-[#3D3B40] p-2">{product.game}</td>
                 <td className="border border-[#3D3B40] p-2">{product.genre}</td>
                 <td className="border border-[#3D3B40] p-2">
-                  ${product.price.toFixed(2)}
+                {product.price}
+                  {/* ${product.price.toFixed(2)} */}
                 </td>
                 <td className="border border-[#3D3B40] p-2">
                   {product.quantity}

@@ -1,5 +1,10 @@
 import axios from "axios";
 import React, { useContext, useState } from "react";
+import {
+  showSuccessMessage,
+  showDangerMessage,
+  showInfoMessage,
+} from "../utils/notification";
 
 const ProductContext = React.createContext();
 const ProductContextUpdate = React.createContext();
@@ -34,9 +39,11 @@ export const ProductProvider = ({ children }) => {
       })
       .then((res) => {
         console.log("productr added:", res.data);
+        showSuccessMessage("Product Added successfully");
       })
       .catch((err) => {
         console.log("err while adding product with image", err);
+        showDangerMessage("Failed to Add product");
       });
   };
   const getProductList = () => {
