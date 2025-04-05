@@ -32,6 +32,8 @@ import OrderList from "./dashboard/order/OrderList";
 import OrderDetail from "./dashboard/order/OrderDetail";
 import CustomerList from "./dashboard/customer/CustomerList";
 import ProductStock from "./dashboard/product/ProductStock";
+import OrderCompletedList from "./dashboard/order/OrderCompletedList";
+import OrderPendingList from "./dashboard/order/OrderPendingList";
 
 const App = () => {
   return (
@@ -62,10 +64,7 @@ const App = () => {
                     path="analytics/best-selling"
                     element={<BestSelling />}
                   />
-                  <Route
-                    path="analytics/low-stock"
-                    element={<LowStock />}
-                  />
+                  <Route path="analytics/low-stock" element={<LowStock />} />
                   <Route path="product/add" element={<ProductAdd />} />
                   <Route
                     path="product/detail/:id"
@@ -76,11 +75,16 @@ const App = () => {
                     path="product/update/:id"
                     element={<ProductUpdate />}
                   />
-                  <Route
-                    path="product/stock"
-                    element={<ProductStock />}
-                  />
+                  <Route path="product/stock" element={<ProductStock />} />
                   <Route path="order/list" element={<OrderList />} />
+                  <Route
+                    path="order/pending-list"
+                    element={<OrderPendingList />}
+                  />
+                  <Route
+                    path="order/completed-list"
+                    element={<OrderCompletedList />}
+                  />
                   <Route path="order/detail/:id" element={<OrderDetail />} />
                   <Route path="customer/list" element={<CustomerList />} />
                   <Route path="*" element={<NotFound />} />

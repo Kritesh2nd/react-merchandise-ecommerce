@@ -150,10 +150,10 @@ export default function ProductAdd() {
             required
           />
           <div className="flex justify-between gap-4 bor">
-            <div className="flex px-3 rounded-md borx2 ">
+            <div className="flex flex-1 px-3 rounded-md borx2 ">
               <select
                 name="onChange"
-                className={`${
+                className={`w-full ${
                   formData.type == "" ? "text-stone-400" : "text-stone-900"
                 }`}
                 onInput={handelOptionSelect}
@@ -176,10 +176,10 @@ export default function ProductAdd() {
                 ))}
               </select>
             </div>
-            <div className="flex bor">
+            <div className="flex flex-1 w-[300px] bor">
               <Input
                 type="number"
-                className="borx2"
+                className="borx2 w-full"
                 placeholder="Quantity"
                 name="quantity"
                 value={formData.quantity}
@@ -187,7 +187,7 @@ export default function ProductAdd() {
                 required
               />
             </div>
-            <div className="flex items-center gap-2 bor">
+            <div className="flex flex-1 items-center gap-2 bor">
               <Checkbox
                 id="featureCheckbox"
                 checked={formData.featured}

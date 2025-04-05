@@ -7,7 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { showInfoMessage } from "../../utils/notification";
 import { loadProduct, updateProduct } from "../../context/ProductContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const typeOptions = ["Bag", "Figurine", "Hat", "Hoodie", "Poster", "T-Shirt"];
 const codeOptions = [
@@ -23,7 +23,9 @@ const codeOptions = [
 export default function ProductUpdate() {
   const { id } = useParams();
   const { productDetail } = loadProduct();
-  const { getProductById, updateProductWithImage } = updateProduct();
+  const { getProductById, updateProductWithImage, deleteProductById } =
+    updateProduct();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -71,6 +73,11 @@ export default function ProductUpdate() {
     const tempCode =
       codeOptions.find((item) => item.name === value)?.code || "";
     setFormData({ ...formData, type: value, code: tempCode });
+  };
+
+  const deleteProduct = () => {
+    deleteProductById(id);
+    navigate("/dashboard/product/list");
   };
 
   const handleSubmit = (e) => {
@@ -157,10 +164,10 @@ export default function ProductUpdate() {
             required
           />
           <div className="flex justify-between gap-4 bor">
-            <div className="flex px-3 rounded-md borx2 ">
+            <div className="flex flex-1 px-3 rounded-md borx2 ">
               <select
                 name="onChange"
-                className={`${
+                className={`w-full ${
                   formData.type == "" ? "text-stone-400" : "text-stone-900"
                 }`}
                 onInput={handelOptionSelect}
@@ -183,7 +190,7 @@ export default function ProductUpdate() {
                 ))}
               </select>
             </div>
-            <div className="flex bor">
+            <div className="flex flex-1 bor">
               <Input
                 type="number"
                 className="borx2"
@@ -194,7 +201,7 @@ export default function ProductUpdate() {
                 required
               />
             </div>
-            <div className="flex items-center gap-2 bor">
+            <div className="flex flex-1 items-center gap-2 bor">
               <Checkbox
                 id="featureCheckbox"
                 checked={formData.featured}
@@ -260,13 +267,19 @@ export default function ProductUpdate() {
             )}
           </div>
 
-          <div className="flex">
+          <div className="flex gap-4 bor">
             <Button
               type="submit"
-              className="transition duration-300 px-20 py-5 bg-[#A1C3D1] text-[#3D3B40] border border-[#A3E4DB] hover:border-stone-500 hover:text-white hover:bg-[#A1C3D1] cursor-pointer"
+              className="transition duration-300 px-16 py-5 bg-[#A1C3D1] text-[#3D3B40] border border-[#A3E4DB] hover:border-stone-500 hover:text-white hover:bg-[#A1C3D1] cursor-pointer"
             >
               Submit
             </Button>
+            <div
+              className="transition duration-300 px-16 py-2 rounded-md bg-[#FF6961] text-[#fff] border border-[#CC4E4A] hover:border-stone-500 hover:text-white hover:bg-[#CC4E4A] cursor-pointer"
+              onClick={deleteProduct}
+            >
+              Delete
+            </div>
             <div className="borx px-10 py-2 none" onClick={printt}>
               print
             </div>

@@ -130,6 +130,18 @@ export const ProductProvider = ({ children }) => {
       });
   };
 
+  const deleteProductById = (id) => {
+    const url = `http://localhost:3000/api/delete-product/${id}`;
+    axios
+      .post(url, header, header)
+      .then((res) => {
+        showSuccessMessage("product deleted successfully");
+      })
+      .catch((err) => {
+        console.log("err while deleteing product", err);
+      });
+  };
+
   return (
     <ProductContext.Provider
       value={{
@@ -149,6 +161,7 @@ export const ProductProvider = ({ children }) => {
           getFeaturedProducts,
           getCategoryProducts,
           getDiscountedProducts,
+          deleteProductById,
         }}
       >
         {children}
