@@ -23,6 +23,11 @@ export const HandelProductProvider = ({ children }) => {
   const [cartCount, setCartCount] = useState(0);
   const [userCart, setUserCart] = useState([]);
 
+  const [userOrder, setUserOrder] = useState([]);
+
+  const [pendingOrder, setPendingOrder] = useState([]);
+  const [completedOrder, setCompletedOrder] = useState([]);
+
   const validateToken = (statusCode) => {
     if (statusCode == 498 && loggedIn) {
       showSuccessMessage("Your account is logged out because of expired token");
@@ -122,27 +127,120 @@ export const HandelProductProvider = ({ children }) => {
       });
   };
 
-  // const makePayment = async (products) => {
-  //   console.log(products);
-  //   console.log("STRIPE_PK", process.env.STRIPE_PK);
-  //   const stripe = await loadStripe("pk_test_");
-  //   //5:00
-  // };
-  
   const makePayment = (products) => {
-    console.log(products);
-    const { VITE_STRIPE_PK, VITE_STRIPE_SK } = envVariable;
-    console.log(
-      "Environment Variables:",
-      envVariable,
-      VITE_STRIPE_PK,
-      VITE_STRIPE_SK
-    );
+    const url = `http://localhost:3000/cart/create-checkout-session`;
+    const orderedItem = products.map((item) => {
+      return {
+        price_data: {
+          currency: "inr",
+          product_data: {
+            name: item.title,
+          },
+          unit_amount: item.price * 100,
+        },
+        quantity: item.quantity,
+      };
+    });
+
+    axios
+      .post(url, orderedItem, header)
+      .then((res) => {
+        console.log("payment response", res.status);
+        if (res.status != 200) showDangerMessage("Order Failed");
+        window.location.href = res.data.redirectUrl;
+      })
+      .catch((err) => {
+        console.log("err while ordering", err);
+      });
+  };
+
+  const getUserOrder = () => {
+    if (!loggedIn) {
+      return;
+    }
+    const url = `http://localhost:3000/cart/user-order-record`;
+    axios
+      .post(url, header, header)
+      .then((res) => {
+        setUserOrder(res.data);
+      })
+      .catch((err) => {
+        console.log("err while getting user orde", err);
+      });
+  };
+
+  const getPendingOrder = () => {
+    if (!loggedIn) {
+      return;
+    }
+    const url = `http://localhost:3000/cart/get-pending-order`;
+    axios
+      .get(url, header, header)
+      .then((res) => {
+        setPendingOrder(res.data);
+      })
+      .catch((err) => {
+        console.log("err while getting pending order", err);
+      });
+  };
+
+  const getCompletedOrder = () => {
+    if (!loggedIn) {
+      return;
+    }
+    const url = `http://localhost:3000/cart/get-completed-order`;
+    axios
+      .get(url, header, header)
+      .then((res) => {
+        setCompletedOrder(res.data);
+      })
+      .catch((err) => {
+        console.log("err while getting completed order", err);
+      });
+  };
+  //
+  const handelPendingOrder = (id) => {
+    if (!loggedIn) {
+      return;
+    }
+    const url = `http://localhost:3000/cart/update-pending-order/${id}`;
+    axios
+      .post(url, header, header)
+      .then((res) => {
+        getPendingOrder();
+        showSuccessMessage("Order is completed");
+      })
+      .catch((err) => {
+        console.log("err while updating pending order", err);
+      });
+  };
+
+  const handelCompletedOrder = (id) => {
+    if (!loggedIn) {
+      return;
+    }
+    const url = `http://localhost:3000/cart/revert-completed-order/${id}`;
+    axios
+      .post(url, header, header)
+      .then((res) => {
+        getCompletedOrder();
+        showSuccessMessage("Completed order is reverted");
+      })
+      .catch((err) => {
+        console.log("err while revertng completed order", err);
+      });
   };
 
   return (
     <HandelProductContext.Provider
-      value={{ searchResult, cartCount, userCart }}
+      value={{
+        searchResult,
+        cartCount,
+        userCart,
+        userOrder,
+        pendingOrder,
+        completedOrder,
+      }}
     >
       <HandelProductContextUpdate.Provider
         value={{
@@ -153,6 +251,11 @@ export const HandelProductProvider = ({ children }) => {
           updateCartProductQuantity,
           removeCartProduct,
           makePayment,
+          getUserOrder,
+          getPendingOrder,
+          getCompletedOrder,
+          handelPendingOrder,
+          handelCompletedOrder,
         }}
       >
         {children}

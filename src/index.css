@@ -13,6 +13,7 @@
 *:focus{outline: none;}
 .mainbody {height: 5000px;width: 100%;}
 .bornone {border: none;} */
+*:focus{outline: none}
 .borx {border: 1px solid #000;}
 .borx1 {border: 1px solid #333;}
 .borx2 {border: 1px solid #666;}

@@ -1,5 +1,6 @@
 import React from "react";
 import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
 
 const Dashboard = () => {
   return (
@@ -7,7 +8,9 @@ const Dashboard = () => {
       <div className="h-full w-[340px] bor">
         <Sidebar />
       </div>
-      <div className="h-full flex-1 basis-0 borx3">Content</div>
+      <div className="flex flex-col h-full flex-1 basis-0 bor">
+        <Outlet />
+      </div>
     </div>
   );
 };

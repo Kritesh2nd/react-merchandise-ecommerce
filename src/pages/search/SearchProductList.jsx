@@ -52,7 +52,7 @@ const SearchProductList = ({ dataList }) => {
                 </span>
                 {product.discount > 0 && (
                   <span className="text-sm line-through text-gray-500">
-                    NRP {product.price.toFixed(2)}
+                    NRP {product.price}
                   </span>
                 )}
               </div>
