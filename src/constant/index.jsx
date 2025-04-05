@@ -36,7 +36,7 @@ export const sidebar = [
     open: false,
     liveLink: false,
     selected: false,
-    display: true,
+    display: false,
     icon: <ChartLine />,
     subList: [
       {

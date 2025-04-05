@@ -4,6 +4,7 @@ import cat from "../assets/images/cat.png";
 import { sidebar } from "../constant";
 import { ChevronDown, ChevronRight, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { updateSetting } from "../context/SettingContext";
 
 const SideTrunk = ({ item, handelSideButton }) => {
   return (
@@ -53,6 +54,7 @@ const SideTrunk = ({ item, handelSideButton }) => {
 
 const Sidebar = () => {
   const naviagte = useNavigate();
+  const { handelLogout } = updateSetting();
   const [sidebarBool, setSidebarBool] = useState(true);
   const [sidebarCopy, setSidebarCopy] = useState(sidebar);
 
@@ -135,7 +137,10 @@ const Sidebar = () => {
       </div>
       <div className="w-full h-[1px] bg-[#000]"></div>
       <div className="flex flex-col flex-1 gap-3 justify-end px-4 py-4 bor">
-        <div className="flex gap-3 px-4 py-2 cursor-pointer rounded-md transition duration-200 hover:border-[#A3E4DB] hover:bg-[#A1C3D1] hover:text-white">
+        <div
+          className="flex gap-3 px-4 py-2 cursor-pointer rounded-md transition duration-200 hover:border-[#A3E4DB] hover:bg-[#A1C3D1] hover:text-white"
+          onClick={handelLogout}
+        >
           <div>
             <LogOut />
           </div>

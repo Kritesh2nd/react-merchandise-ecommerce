@@ -23,6 +23,8 @@ export const SettingProvider = ({ children }) => {
   const [displayAuthForm, setDisplayAuthForm] = useState(false);
   const [token, setToken] = useState(localStorage.getItem("userToken") || null);
   const [loggedIn, setLoggedIn] = useState(token ? true : false);
+  const [userList, setUserList] = useState([]);
+
   const isTokenExpired = (token) => {
     if (!token) return true;
     try {
@@ -119,6 +121,18 @@ export const SettingProvider = ({ children }) => {
     // window.location.reload();
   };
 
+  const getUserList = () => {
+    const url = `http://localhost:3000/api/users`;
+    axios
+      .get(url, header, header)
+      .then((res) => {
+        setUserList(res.data);
+      })
+      .catch((err) => {
+        console.log("err while getting users", err);
+      });
+  };
+
   return (
     <SettingContext.Provider
       value={{
@@ -130,6 +144,7 @@ export const SettingProvider = ({ children }) => {
         bearerToken,
         header,
         logoutVisible,
+        userList,
       }}
     >
       <SettingContextUpdate.Provider
@@ -139,6 +154,7 @@ export const SettingProvider = ({ children }) => {
           createUser,
           toggleLogoutVisible,
           handelLogout,
+          getUserList,
         }}
       >
         {children}
