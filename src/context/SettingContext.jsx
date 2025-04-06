@@ -24,6 +24,7 @@ export const SettingProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("userToken") || null);
   const [loggedIn, setLoggedIn] = useState(token ? true : false);
   const [userList, setUserList] = useState([]);
+  const [user, setUser] = useState(null);
 
   const isTokenExpired = (token) => {
     if (!token) return true;
@@ -48,7 +49,17 @@ export const SettingProvider = ({ children }) => {
       return false;
     }
   }
+  function extractNameFromToken(token) {
+    if (!token) return "";
+    const payloadBase64 = token ? token.split(".")[1] : "";
+    const payloadJson = atob(payloadBase64); // Decode base64
+    const payload = JSON.parse(payloadJson);
+
+    // Return the "sub" field which typically contains the user identifier
+    return payload.name ? payload.name : "";
+  }
   const [isAdmin, setIsAdmin] = useState(hasAdminRole(token));
+  const [userName, setUserName] = useState(extractNameFromToken(token));
   const [bearerToken, setBearerToken] = useState(
     token ? `Bearer ${JSON.parse(token)}` : ""
   );
@@ -98,9 +109,10 @@ export const SettingProvider = ({ children }) => {
           localStorage.setItem("userToken", JSON.stringify(res.data.token));
           setIsAdmin(hasAdminRole(res.data.token));
           showSuccessMessage("Logged In Successfully");
-          refreshValues();
           setLoggedIn(true);
           toggleDisplayAuthForm();
+          getLoggedInUser(`Bearer ${res.data.token}`);
+          refreshValues();
         }
       })
       .catch((err) => {
@@ -117,6 +129,7 @@ export const SettingProvider = ({ children }) => {
     navigate("/");
     setLogoutVisible(false);
     setIsAdmin(false);
+    setUserName(null);
     showInfoMessage("Logged Out Successfully");
     // window.location.reload();
   };
@@ -133,6 +146,24 @@ export const SettingProvider = ({ children }) => {
       });
   };
 
+  const getLoggedInUser = (token) => {
+    const tempheader = { headers: { Authorization: token } };
+    const url = `http://localhost:3000/api/user/me`;
+    axios
+      .get(url, tempheader, tempheader)
+      .then((res) => {
+        localStorage.setItem("userData", res.data);
+        setUser(res.data);
+      })
+      .catch((err) => {
+        console.log("err while getting logged in user", err);
+      });
+  };
+
+  const getUserName = () => {
+    setUserName(extractNameFromToken(token));
+  };
+
   return (
     <SettingContext.Provider
       value={{
@@ -145,6 +176,8 @@ export const SettingProvider = ({ children }) => {
         header,
         logoutVisible,
         userList,
+        user,
+        userName,
       }}
     >
       <SettingContextUpdate.Provider
@@ -155,6 +188,8 @@ export const SettingProvider = ({ children }) => {
           toggleLogoutVisible,
           handelLogout,
           getUserList,
+          getLoggedInUser,
+          getUserName,
         }}
       >
         {children}

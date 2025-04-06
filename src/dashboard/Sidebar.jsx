@@ -4,7 +4,7 @@ import cat from "../assets/images/cat.png";
 import { sidebar } from "../constant";
 import { ChevronDown, ChevronRight, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { updateSetting } from "../context/SettingContext";
+import { loadSetting, updateSetting } from "../context/SettingContext";
 
 const SideTrunk = ({ item, handelSideButton }) => {
   return (
@@ -54,7 +54,8 @@ const SideTrunk = ({ item, handelSideButton }) => {
 
 const Sidebar = () => {
   const naviagte = useNavigate();
-  const { handelLogout } = updateSetting();
+  const { userName,isAdmin } = loadSetting();
+  const { handelLogout, getUserName } = updateSetting();
   const [sidebarBool, setSidebarBool] = useState(true);
   const [sidebarCopy, setSidebarCopy] = useState(sidebar);
 
@@ -112,7 +113,11 @@ const Sidebar = () => {
     });
   };
 
-  useEffect(() => {}, [sidebarCopy, sidebarBool]);
+  useEffect(() => {
+    getUserName();
+  }, []);
+
+  useEffect(() => {}, [sidebarCopy, sidebarBool, userName]);
 
   return (
     <div className="flex pt-6 flex-col h-full w-full border-r border-black">
@@ -153,8 +158,8 @@ const Sidebar = () => {
             </div>
           </div>
           <div className="flex flex-col bor">
-            <div>John Doe</div>
-            <div className="text-sm text-stone-500">Admin</div>
+            <div>{userName && userName}</div>
+            <div className="text-sm text-stone-500">{isAdmin?"Admin":"User"}</div>
           </div>
         </div>
       </div>
