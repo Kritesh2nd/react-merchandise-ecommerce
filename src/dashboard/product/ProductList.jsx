@@ -28,7 +28,6 @@ export default function ProductList() {
   };
 
   const naviagetToUpdate = (id) => {
-    console.log("item:", id);
     naviaget(`/dashboard/product/update/${id}`);
   };
 
@@ -37,7 +36,6 @@ export default function ProductList() {
   }, []);
 
   useEffect(() => {
-    // console.log("productList",productList)
     setDataList(productList);
   }, [productList]);
 

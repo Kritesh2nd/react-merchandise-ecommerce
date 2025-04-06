@@ -54,7 +54,7 @@ const SideTrunk = ({ item, handelSideButton }) => {
 
 const Sidebar = () => {
   const naviagte = useNavigate();
-  const { userName,isAdmin } = loadSetting();
+  const { userName, isAdmin } = loadSetting();
   const { handelLogout, getUserName } = updateSetting();
   const [sidebarBool, setSidebarBool] = useState(true);
   const [sidebarCopy, setSidebarCopy] = useState(sidebar);
@@ -159,7 +159,9 @@ const Sidebar = () => {
           </div>
           <div className="flex flex-col bor">
             <div>{userName && userName}</div>
-            <div className="text-sm text-stone-500">{isAdmin?"Admin":"User"}</div>
+            <div className="text-sm text-stone-500">
+              {isAdmin ? "Admin" : "User"}
+            </div>
           </div>
         </div>
       </div>

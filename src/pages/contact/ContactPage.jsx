@@ -37,7 +37,6 @@ const ContactPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form submitted:", formData);
       alert("Message sent successfully!");
       setFormData({ name: "", email: "", message: "" });
     }

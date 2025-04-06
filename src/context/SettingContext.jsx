@@ -33,7 +33,7 @@ export const SettingProvider = ({ children }) => {
       const currentTime = Math.floor(Date.now() / 1000);
       return payload.exp > currentTime;
     } catch (error) {
-      console.error("Invalid token:", error);
+      console.error("err invalid token:", error);
       return true;
     }
   };

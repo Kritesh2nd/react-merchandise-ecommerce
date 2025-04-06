@@ -1,5 +1,6 @@
 import React from "react";
 import { Star, ShoppingCart } from "lucide-react";
+import { updateHandelProduct } from "../../context/HandelProductContext";
 
 const Card = ({ children, className }) => (
   <div
@@ -23,6 +24,12 @@ const Button = ({ children, className, onClick }) => (
 );
 
 const SearchProductList = ({ dataList }) => {
+  const { addToCart } = updateHandelProduct();
+
+  const addProductToCart = (id) => {
+    addToCart(id);
+  };
+
   return (
     <div className="p-6 flex flex-col gap-6 bg-[#F4EAE6] min-h-screen sm:px-20 md:px-52 ">
       {dataList && dataList.length == 0 && (
@@ -36,7 +43,7 @@ const SearchProductList = ({ dataList }) => {
               alt={product.title}
               className="w-32 h-32 object-cover rounded-lg"
             />
-            <CardContent className="flex-1">
+            <CardContent className="flex-1 bor">
               <h3 className="text-lg font-semibold text-[#3D3B40]">
                 {product.title}
               </h3>
@@ -56,9 +63,16 @@ const SearchProductList = ({ dataList }) => {
                   </span>
                 )}
               </div>
-              <Button>
-                <ShoppingCart className="w-4 h-4" /> Add to Cart
-              </Button>
+              <div className="flex">
+                <Button
+                  className="cursor-pointer"
+                  onClick={() => {
+                    addProductToCart(product.id);
+                  }}
+                >
+                  <ShoppingCart className="w-4 h-4" /> Add to Cart
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}

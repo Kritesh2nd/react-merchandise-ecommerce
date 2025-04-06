@@ -1,18 +1,9 @@
 import { CheckCircle, ShoppingCart, Home } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-// import { updateHandelProduct } from "../context/HandelProductContext";
-// import { useEffect } from "react";
 
 export default function PaymentSuccess() {
   const navigate = useNavigate();
-
-  // const { removeAllUserCartProduct } = updateHandelProduct();
-
-  // useEffect(() => {
-  //   console.log("removeAllUserCartProduct");
-  //   removeAllUserCartProduct();
-  // }, []);
 
   return (
     <div className="flex items-center justify-center h-screen bg-[#F4EAE6] px-4">

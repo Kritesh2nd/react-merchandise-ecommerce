@@ -28,7 +28,6 @@ const CustomerList = () => {
   };
 
   const naviagetToUpdate = (id) => {
-    console.log("item:", id);
     naviaget(`/dashboard/user/update/${id}`);
   };
 
@@ -37,7 +36,6 @@ const CustomerList = () => {
   }, []);
 
   useEffect(() => {
-    console.log("userList", userList);
     setDataList(userList);
   }, [userList]);
   return (
