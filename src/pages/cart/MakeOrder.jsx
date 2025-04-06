@@ -21,7 +21,6 @@ const MakeOrder = () => {
 
   const onOrder = () => {
     const userOrder = userCart;
-    // console.log("userCart", userCart);
     makePayment(userCart);
   };
 

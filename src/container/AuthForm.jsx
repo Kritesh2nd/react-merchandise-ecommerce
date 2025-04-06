@@ -47,7 +47,6 @@ export default function AuthForm() {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      // console.log("Form submitted", formData,isLogin);
       if (isLogin) {
         loginUser(formData);
       } else {

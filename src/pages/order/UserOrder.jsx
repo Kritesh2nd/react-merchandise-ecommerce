@@ -18,7 +18,6 @@ const UserOrder = () => {
 
   // Group orders by orderId
   const groupedOrders = dataList.reduce((acc, order) => {
-    console.log("order::", order.status);
     if (!acc[order.orderId]) {
       acc[order.orderId] = {
         items: [],
@@ -37,7 +36,6 @@ const UserOrder = () => {
   }, []);
 
   useEffect(() => {
-    console.log("userOrder", userOrder);
     setDataList(userOrder ? userOrder : []);
   }, [userOrder]);
 

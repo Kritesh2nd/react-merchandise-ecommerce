@@ -66,6 +66,7 @@ export default function Navbar() {
               type="text"
               placeholder="Search..."
               className="bg-[#A1C3D1] text-white rounded-full px-4 py-2 focus:outline-none placeholder-white"
+              // onClick={() => {navigate("/search/");}}
               onInput={handelSearch}
             />
             <Search className="absolute right-3 top-2 text-white" size={18} />
