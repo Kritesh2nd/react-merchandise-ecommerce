@@ -8,8 +8,8 @@ export default function AuthForm() {
   const { displayAuthForm } = loadSetting();
   const { toggleDisplayAuthForm, loginUser, createUser } = updateSetting();
   const [formData, setFormData] = useState({
-    email: "admin@gmail.com ",
-    password: "password",
+    email: "",
+    password: "",
     name: "",
   });
   const [errors, setErrors] = useState({ email: "", password: "", name: "" });
