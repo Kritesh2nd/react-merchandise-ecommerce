@@ -40,11 +40,14 @@ const UserOrder = () => {
   }, [userOrder]);
 
   return (
-    <div className="mt-10 mb-20 flex flex-col gap-4 overflow-x-auto whitespace-nowrap px-6 sm:px-6 md:px-20 lg:px-64">
+    <div className="mt-10 mb-20 flex flex-col min-h-[500px] gap-4 overflow-x-auto whitespace-nowrap px-6 sm:px-6 md:px-20 lg:px-64 bor">
       <h2 className="text-2xl font-semibold text-gray-800 mb-4 flex items-center">
         <ShoppingCart className="mr-2" /> Order History
       </h2>
       <div className="space-y-6">
+        {dataList && dataList.length == 0 && (
+          <div className="text-stone-700">No order history</div>
+        )}
         {Object.entries(groupedOrders).map(
           ([orderId, { items, grandTotal, date, status }]) => (
             <div

@@ -50,8 +50,8 @@ export default function ProductList() {
               <th className="border border-[#3D3B40] p-2">Code</th>
               <th className="border border-[#3D3B40] p-2">Type</th>
               <th className="border border-[#3D3B40] p-2">Title</th>
-              {/* <th className="border border-[#3D3B40] p-2">Description</th> */}
               <th className="border border-[#3D3B40] p-2">Game</th>
+              <th className="border border-[#3D3B40] p-2">Featured</th>
               <th className="border border-[#3D3B40] p-2">Genre</th>
               <th className="border border-[#3D3B40] p-2">Price</th>
               <th className="border border-[#3D3B40] p-2">Quantity</th>
@@ -61,19 +61,25 @@ export default function ProductList() {
           <tbody>
             {currentProducts.map((product, index) => (
               <tr key={product.id} className="bg-[#ddd]">
-                <td className="border border-[#3D3B40] p-2">
+                <td className="border border-[#3D3B40] p-2 text-center">
                   {index + 1 + (currentPage - 1) * ITEMS_PER_PAGE}
                 </td>
                 <td className="border border-[#3D3B40] p-2">{product.code}</td>
                 <td className="border border-[#3D3B40] p-2">{product.type}</td>
                 <td className="border border-[#3D3B40] p-2">{product.title}</td>
-                {/* <td className="border border-[#3D3B40] p-2">
-                  {product.description}
-                </td> */}
                 <td className="border border-[#3D3B40] p-2">{product.game}</td>
+                <td className="border border-[#3D3B40] p-2">
+                  <span
+                    className={`${
+                      product.featured ? "bg-green-500" : "bg-gray-400"
+                    } text-sm px-1 rounded-sm`}
+                  >
+                    {product.featured ? "true" : "false"}
+                  </span>
+                </td>
                 <td className="border border-[#3D3B40] p-2">{product.genre}</td>
                 <td className="border border-[#3D3B40] p-2">
-                {product.price}
+                  {product.price}
                   {/* ${product.price.toFixed(2)} */}
                 </td>
                 <td className="border border-[#3D3B40] p-2">

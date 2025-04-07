@@ -28,7 +28,11 @@ const UserCart = () => {
         Shopping Cart
       </h2>
       <div className="flex flex-col gap-4 overflow-x-auto whitespace-nowrap px-6 sm:px-6 md:px-20 lg:px-60">
-        {userCart && userCart.length == 0 && <div>No Products in Cart</div>}
+        {userCart && userCart.length == 0 && (
+          <div className="px-12 bor text-stone-700">
+            No Products in Cart
+          </div>
+        )}
         {userCart &&
           userCart.map((product) => (
             <div
