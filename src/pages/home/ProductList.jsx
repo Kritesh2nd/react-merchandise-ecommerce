@@ -8,7 +8,10 @@ const ProductList = ({ dataList, title }) => {
   const { toggleDisplayAuthForm } = updateSetting();
   const { addToCart } = updateHandelProduct();
   return (
-    <div className="p-6 bg-[#F4EAE6] min-h-screen sm:px-20 lg:px-40">
+    <div
+      id={`${title == "Featured Products" ? "feature-product" : ""}`}
+      className="p-6 bg-[#F4EAE6] min-h-screen sm:px-20 lg:px-40"
+    >
       <h2 className="text-3xl font-bold text-[#3D3B40] mb-6 text-center bor">
         {title ? title : "Product List"}
       </h2>

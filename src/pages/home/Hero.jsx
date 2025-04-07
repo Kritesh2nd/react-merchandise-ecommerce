@@ -13,10 +13,15 @@ export default function Hero() {
           Discover premium gaming merchandise that brings your favorite games to
           life. Shop now and upgrade your collection!
         </p>
-        <button className="mt-6 flex items-center gap-2 bg-[#A1C3D1] text-[#3D3B40] px-6 py-3 rounded-lg shadow-md hover:bg-[#7D9EAE] cursor-pointer transition duration-300">
-          <ShoppingBag size={22} />
-          Shop Now
-        </button>
+        <div className="flex">
+          <a
+            href="#feature-product"
+            className="mt-6 flex items-center gap-2 bg-[#A1C3D1] text-[#3D3B40] px-6 py-3 rounded-lg shadow-md hover:bg-[#7D9EAE] cursor-pointer transition duration-300"
+          >
+            <ShoppingBag size={22} />
+            Shop Now
+          </a>
+        </div>
       </div>
 
       {/* Right Image */}

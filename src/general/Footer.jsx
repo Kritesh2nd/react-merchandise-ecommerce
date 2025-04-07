@@ -1,5 +1,13 @@
 import React from "react";
-import { Facebook, Twitter, Instagram, ShoppingBag, Mail, Phone, MapPin } from "lucide-react";
+import {
+  Facebook,
+  Twitter,
+  Instagram,
+  ShoppingBag,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react";
 
 const Footer = () => {
   return (
@@ -20,17 +28,17 @@ const Footer = () => {
           <h3 className="text-lg font-semibold text-[#D8A7B1]">Quick Links</h3>
           <ul className="mt-2 space-y-2">
             <li>
-              <a href="#" className="hover:text-[#F9D976] transition">
+              <a href="/" className="hover:text-[#F9D976] transition">
                 Home
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-[#F9D976] transition">
+              <a href="/shop" className="hover:text-[#F9D976] transition">
                 Shop
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-[#F9D976] transition">
+              <a href="/contact" className="hover:text-[#F9D976] transition">
                 Contact Us
               </a>
             </li>
@@ -52,13 +60,16 @@ const Footer = () => {
           <h3 className="text-lg font-semibold text-[#D8A7B1]">Contact Us</h3>
           <ul className="mt-2 space-y-2">
             <li className="flex items-center justify-center md:justify-start">
-              <Mail size={18} className="mr-2 text-[#F9D976]" /> support@gamemerch.com
+              <Mail size={18} className="mr-2 text-[#F9D976]" />{" "}
+              support@gamemerch.com
             </li>
             <li className="flex items-center justify-center md:justify-start">
-              <Phone size={18} className="mr-2 text-[#F9D976]" /> +1 (234) 567-890
+              <Phone size={18} className="mr-2 text-[#F9D976]" /> +1 (234)
+              567-890
             </li>
             <li className="flex items-center justify-center md:justify-start">
-              <MapPin size={18} className="mr-2 text-[#F9D976]" /> 123 Gaming St, Virtual City, USA
+              <MapPin size={18} className="mr-2 text-[#F9D976]" /> 123 Gaming
+              St, Lalitpur, Nepal
             </li>
           </ul>
         </div>
